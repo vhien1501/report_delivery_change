@@ -18,8 +18,8 @@ namespace WebApplication1
             List<DeliveryChangeItem> options = new List<DeliveryChangeItem>();
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
-                string from = DateTime.Today.ToString("yyyy/MM/dd HH:mm:ss");
-                string to = DateTime.Today.AddDays(1).AddSeconds(-1).ToString("yyyy/MM/dd HH:mm:ss");
+                //string from = DateTime.Today.ToString("yyyy/MM/dd HH:mm:ss");
+                //string to = DateTime.Today.AddDays(1).AddSeconds(-1).ToString("yyyy/MM/dd HH:mm:ss");
                 string sql = "SELECT id,job_no,new_delivery_date,reason_for_change,comments,customer_name,original_delivery_date,updated_by,created,user_login,user_name FROM ft_deliverychanges tbA LEFT JOIN ft_users tbB ON tbA.updated_by=tbB.user_id WHERE tbA.created between @from and @to";
                 SqlCommand cmd = new SqlCommand(sql, connection);
                 cmd.Parameters.AddWithValue("@from", DateTime.Today);
