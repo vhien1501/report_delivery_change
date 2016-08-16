@@ -7,7 +7,6 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
-//水木 Nguyen
 
 namespace WebApplication1
 {
@@ -18,8 +17,6 @@ namespace WebApplication1
             List<DeliveryChangeItem> options = new List<DeliveryChangeItem>();
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
-                //string from = DateTime.Today.ToString("yyyy/MM/dd HH:mm:ss");
-                //string to = DateTime.Today.AddDays(1).AddSeconds(-1).ToString("yyyy/MM/dd HH:mm:ss");
                 string sql = "SELECT id,job_no,new_delivery_date,reason_for_change,comments,customer_name,original_delivery_date,updated_by,created,user_login,user_name FROM ft_deliverychanges tbA LEFT JOIN ft_users tbB ON tbA.updated_by=tbB.user_id WHERE tbA.created between @from and @to";
                 SqlCommand cmd = new SqlCommand(sql, connection);
                 cmd.Parameters.AddWithValue("@from", DateTime.Today);
@@ -32,13 +29,17 @@ namespace WebApplication1
                             DeliveryChangeItem item = new DeliveryChangeItem();
                             item.ID =Convert.ToInt32(reader["id"]);
                             item.JobNo = reader["job_no"].ToString();
-                            item.NewDeliveryDate = Convert.ToDateTime(reader["new_delivery_date"]);
+                            if (!reader.IsDBNull(reader.GetOrdinal("new_delivery_date")))
+                                item.NewDeliveryDate = Convert.ToDateTime(reader["new_delivery_date"]);
                             item.ReasonForChange = reader["reason_for_change"].ToString();
                             item.Comments = reader["comments"].ToString();
                             item.CustomerName = reader["customer_name"].ToString();
-                            item.OriginalDeliveryDate = Convert.ToDateTime(reader["original_delivery_date"]);
-                            item.UpdatedBy = Convert.ToInt32(reader["updated_by"]);
-                            item.Created = Convert.ToDateTime(reader["created"]);
+                            if (!reader.IsDBNull(reader.GetOrdinal("original_delivery_date")))
+                                item.OriginalDeliveryDate = Convert.ToDateTime(reader["original_delivery_date"]);
+                            if (!reader.IsDBNull(reader.GetOrdinal("updated_by")))
+                                item.UpdatedBy = Convert.ToInt32(reader["updated_by"]);
+                            if (!reader.IsDBNull(reader.GetOrdinal("created")))
+                                item.Created = Convert.ToDateTime(reader["created"]);
                             item.UserLogin = reader["user_login"].ToString();
                             item.UserName = reader["user_name"].ToString();
                             options.Add(item);
